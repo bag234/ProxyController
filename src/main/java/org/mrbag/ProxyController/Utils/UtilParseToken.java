@@ -2,6 +2,7 @@ package org.mrbag.ProxyController.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class UtilParseToken {
 
@@ -27,6 +28,10 @@ public class UtilParseToken {
 
 	public static String getToken(String query) {
 		return getOrNull("token", parseToMap(query));
+	}
+	
+	public static String generateToken() {
+		return UUID.randomUUID().toString().replace("-", "");
 	}
 	
 }

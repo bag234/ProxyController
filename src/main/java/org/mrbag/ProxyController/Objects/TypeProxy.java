@@ -2,6 +2,6 @@ package org.mrbag.ProxyController.Objects;
 
 public enum TypeProxy {
 
-	HTTP, SOCK;
+	HTTP, SOCK, NONE;
 	
 }
