@@ -58,6 +58,8 @@ public class ServerEndPoint extends TextWebSocketHandler {
 	
 	@Override
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
+		System.out.println("{DEBUG} " + message);
+		
 		if (message.getPayload() instanceof String) {
 			dispatcher.processCommand((String)message.getPayload(), ss.get(session.getId()));
 		}

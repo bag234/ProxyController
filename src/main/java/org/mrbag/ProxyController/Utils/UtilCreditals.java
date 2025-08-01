@@ -33,6 +33,24 @@ public class UtilCreditals {
 				credital.getToDate().toString());
 	}
 	
+	public static String CreditalsToSimple(ProxyCreditals credital) {
+		return String.format("%s@%s@%s", credital.getLogin(), credital.getPassword(), 
+				credital.getToDate().toString());
+	}
+	
+	public static String CreditalsToSimple(Collection<ProxyCreditals> creditals) {
+		String buf = ""; 
+		
+		if (creditals.size() > 0)
+			for(ProxyCreditals pxc : creditals)
+				if (buf.isEmpty())
+					buf = CreditalsToSimple(pxc);
+				else 
+					buf += "\n" + CreditalsToSimple(pxc);
+				
+		return buf;
+	}
+	
 	public static String CreditalsToJSON(Collection<ProxyCreditals> creditals) {
 		String buf = ""; 
 		
