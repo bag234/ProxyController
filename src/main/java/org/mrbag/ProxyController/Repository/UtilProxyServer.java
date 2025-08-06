@@ -7,6 +7,7 @@ import org.mrbag.ProxyController.Objects.ProxyCreditals;
 import org.mrbag.ProxyController.Objects.ProxyServers;
 import org.mrbag.ProxyController.Objects.StatusServer;
 import org.mrbag.ProxyController.Objects.Events.EventControl;
+import org.mrbag.ProxyController.Objects.Events.Imp.RepeatComand;
 import org.mrbag.ProxyController.Objects.Events.Imp.UserEvent;
 import org.mrbag.ProxyController.Utils.UtilCreditals;
 import org.mrbag.ProxyController.Utils.UtilParseToken;
@@ -36,6 +37,12 @@ public class UtilProxyServer {
 	@Autowired
 	public void setServers(ProxyServerRep servers) {
 		this.servers = servers;
+	}
+	
+	@Transactional
+	public void dropServer(String token) {
+		servers.dropOneByToken(token);
+		controler.mountLazyEvent(() -> token, RepeatComand.New("~block"));
 	}
 	
 	public String newServer() {
@@ -76,6 +83,10 @@ public class UtilProxyServer {
 		servers.saveAndFlush(pxs);
 	}
 	
+	public Collection<ProxyServers> getAllServers(){
+		return servers.findAll();
+	}
+	
 	public Collection<ProxyCreditals> getAllActiveUser(ProxyServers pxs){
 		return creditals.findAllByProxyServersFiltredByTime(pxs);
 	}
@@ -87,7 +98,7 @@ public class UtilProxyServer {
 		
 		creditals.save(pc);
 		
-		controler.mountEvent(pxs, new UserEvent(pc));
+		controler.mountEventExcute(pxs, new UserEvent(pc));
 		return pc;
 	}
 	
@@ -96,11 +107,13 @@ public class UtilProxyServer {
 	 * @param token - access token for @see {@link ProxyServers}
 	 * @return - new creditals for user;
 	 */
-	
 	public ProxyCreditals addNewCreditals(String token) {
 		ProxyServers pxs = getServerOrNull(token);
 		if (pxs == null)
 			return null;
 		return addNewUser(pxs);
 	}
+	
+	
+	
 }

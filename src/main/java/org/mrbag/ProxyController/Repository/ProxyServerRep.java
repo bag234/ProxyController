@@ -22,4 +22,8 @@ public interface ProxyServerRep extends JpaRepository<ProxyServers, Long> {
 	@Modifying
 	@Query("UPDATE ProxyServers px SET px.status = :st WHERE px.status != 'NONE'")
 	void updateStatusAll(@Param("st") StatusServer status);
+	
+	@Modifying
+	@Query("DELETE FROM ProxyServers px WHERE px.token = :tok")
+	void dropOneByToken(@Param("tok") String token);
 }

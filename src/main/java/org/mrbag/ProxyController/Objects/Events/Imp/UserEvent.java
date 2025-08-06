@@ -17,10 +17,15 @@ public class UserEvent implements IEvent {
 	@Override
 	public void process(WebSocketRegulator ws) {
 		try {
-			ws.sendMessage("~user " + UtilCreditals.CreditalsToJSON(user));
+			ws.sendMessage("~update " + UtilCreditals.CreditalsToJSON(user));
 		} catch (IOException e) {
 			throw new UnsupportedOperationException("Add VALIDATION: " + e);
 		}
+	}
+
+	@Override
+	public String presnt() {
+		return "Update " + user.toString();
 	}
 
 }

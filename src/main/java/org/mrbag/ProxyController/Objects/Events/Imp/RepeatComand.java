@@ -19,4 +19,13 @@ public class RepeatComand implements IEvent {
 		} catch (IOException e) {}
 	}
 
+	@Override
+	public String presnt() {
+		return "send command: " + command;
+	}
+	
+	public static RepeatComand New(String command) {
+		return new RepeatComand(command);
+	}
+
 }

@@ -2,7 +2,7 @@ package org.mrbag.ProxyController.Objects;
 
 import java.time.LocalDateTime;
 
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -34,7 +34,7 @@ public class ProxyCreditals {
 	
 	LocalDateTime toDate;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "server_id")
 	ProxyServers ps;
 	
