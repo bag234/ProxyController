@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.mrbag.ProxyController.Objects.ProxyCreditals;
 import org.mrbag.ProxyController.Objects.ProxyServers;
 import org.mrbag.ProxyController.Objects.StatusServer;
+import org.mrbag.ProxyController.Objects.User;
 import org.mrbag.ProxyController.Objects.Events.EventControl;
 import org.mrbag.ProxyController.Objects.Events.Imp.RepeatComand;
 import org.mrbag.ProxyController.Objects.Events.Imp.UserEvent;
@@ -24,20 +25,7 @@ public class UtilProxyServer {
 	
 	ProxyCreditalsRep creditals;
 	
-	@Autowired
-	public void setControler(EventControl controler) {
-		this.controler = controler;
-	}
-	
-	@Autowired
-	public void setCreditals(ProxyCreditalsRep creditals) {
-		this.creditals = creditals;
-	}
-	
-	@Autowired
-	public void setServers(ProxyServerRep servers) {
-		this.servers = servers;
-	}
+	UtilUser utils;
 	
 	@Transactional
 	public void dropServer(String token) {
@@ -92,9 +80,10 @@ public class UtilProxyServer {
 	}
 	
 	// TODO add check unicule user creditals on server
-	public ProxyCreditals addNewUser(ProxyServers pxs) {
+	public ProxyCreditals addNewUser(User usr, ProxyServers pxs) {
 		ProxyCreditals pc = UtilCreditals.newCridetals(LocalDateTime.now().plusDays(1));
 		pc.setPs(pxs);
+		pc.setUser(usr);
 		
 		creditals.save(pc);
 		
@@ -107,13 +96,33 @@ public class UtilProxyServer {
 	 * @param token - access token for @see {@link ProxyServers}
 	 * @return - new creditals for user;
 	 */
+	@Deprecated
 	public ProxyCreditals addNewCreditals(String token) {
 		ProxyServers pxs = getServerOrNull(token);
 		if (pxs == null)
 			return null;
-		return addNewUser(pxs);
+		return null;
+//		return addNewUser(pxs);
 	}
 	
+	@Autowired
+	public void setUtils(UtilUser utils) {
+		this.utils = utils;
+	}
 	
+	@Autowired
+	public void setControler(EventControl controler) {
+		this.controler = controler;
+	}
+	
+	@Autowired
+	public void setCreditals(ProxyCreditalsRep creditals) {
+		this.creditals = creditals;
+	}
+	
+	@Autowired
+	public void setServers(ProxyServerRep servers) {
+		this.servers = servers;
+	}
 	
 }

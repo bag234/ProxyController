@@ -2,7 +2,10 @@ package org.mrbag.ProxyController.Objects;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -37,5 +40,13 @@ public class ProxyCreditals {
 	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "server_id")
 	ProxyServers ps;
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.REMOVE)
+	@JoinColumn(name = "user_id")
+	User user;
+	
+	@Builder.Default
+	@Column(name = "continue")
+	boolean isContinue = true;
 	
 }

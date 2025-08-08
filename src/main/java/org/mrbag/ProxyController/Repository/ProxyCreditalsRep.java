@@ -5,6 +5,8 @@ import java.util.Collection;
 
 import org.mrbag.ProxyController.Objects.ProxyCreditals;
 import org.mrbag.ProxyController.Objects.ProxyServers;
+import org.mrbag.ProxyController.Objects.User;
+import org.mrbag.ProxyController.Objects.Dute.ProxyCreditalsDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,6 +20,9 @@ public interface ProxyCreditalsRep extends JpaRepository<ProxyCreditals,Long> {
 
 	@Query("SELECT pc FROM ProxyCreditals pc WHERE pc.ps = :pxs")
 	Collection<ProxyCreditals> findAllByProxyServers(@Param("pxs")ProxyServers pxs);
+	
+	@Query("SELECT pc.login, pc.password, pc.toDate, pc.ps, pc.isContinue FROM ProxyCreditals pc WHERE pc.user = :usr")
+	Collection<ProxyCreditalsDTO> findAllByUser(@Param("usr") User usr);
 	
 
 //	void dropAllBeforeDate(@Param("time") LocalDateTime ldt);

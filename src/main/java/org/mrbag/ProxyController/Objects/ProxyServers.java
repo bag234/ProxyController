@@ -24,6 +24,9 @@ import lombok.NoArgsConstructor;
 @Table(name = "Servers")
 public class ProxyServers implements IEventSocket {
 
+	
+	
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
@@ -45,6 +48,8 @@ public class ProxyServers implements IEventSocket {
 	
 	@Column(unique = true)
 	String token;
+	
+ 	double cost;
 	
 	public void setFromJson(JSONObject obj) {
 		if(obj.keySet().contains("name")) {
