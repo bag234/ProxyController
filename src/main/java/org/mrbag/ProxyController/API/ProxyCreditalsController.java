@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.mrbag.ProxyController.Objects.ProxyCreditals;
 import org.mrbag.ProxyController.Objects.Dute.ProxyCreditalsDTO;
+import org.mrbag.ProxyController.Objects.Dute.ProxyServerDTO;
 import org.mrbag.ProxyController.Repository.UtilCreditals;
 import org.mrbag.ProxyController.Repository.UtilProxyServer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +46,38 @@ public class ProxyCreditalsController {
 		return creditals.getMyCreditals(creditals.checkAuthUser(dto.getLogin(), dto.getToken()));
 	}
 	
+	@GetMapping("/continue")
+	public boolean canResume(
+			@RequestBody CreditalsDTO dto
+			) {
+		if (dto == null) return false;
+		
+		return creditals.setResumeStatus(true, dto.getLogin(), dto.getPassword(), dto.getPs().getToken());
+	}
+	
+	@PostMapping("/continue")
+	public boolean canNotResume(
+			@RequestBody CreditalsDTO dto
+			) {
+		if (dto == null) return false;
+		
+		return creditals.setResumeStatus(false, dto.getLogin(), dto.getPassword(), dto.getPs().getToken());
+	}
+	
+	
 	@Getter
 	@Setter
-	static class UserDTO{
+	final static class UserDTO{
 		String login;
 		String token;
+	}
+	
+	@Getter 
+	@Setter
+	final static class CreditalsDTO{
+		String login;
+		String password;
+		ProxyServerDTO ps; //-> token;
 	}
 	
 }

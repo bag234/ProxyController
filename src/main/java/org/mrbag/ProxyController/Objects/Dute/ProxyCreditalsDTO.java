@@ -4,10 +4,6 @@ import java.time.LocalDateTime;
 
 import org.mrbag.ProxyController.Objects.ProxyServers;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 

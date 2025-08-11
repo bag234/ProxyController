@@ -4,7 +4,6 @@ import org.mrbag.ProxyController.Objects.ProxyServers;
 import org.mrbag.ProxyController.Objects.StatusServer;
 import org.mrbag.ProxyController.Objects.TypeProxy;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,6 +1,5 @@
 package org.mrbag.ProxyController.API;
 
-import org.json.JSONObject;
 import org.mrbag.ProxyController.Objects.User;
 import org.mrbag.ProxyController.Repository.UtilUser;
 import org.springframework.beans.factory.annotation.Autowired;

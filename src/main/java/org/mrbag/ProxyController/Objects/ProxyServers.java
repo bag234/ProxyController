@@ -23,9 +23,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(name = "Servers")
 public class ProxyServers implements IEventSocket {
-
-	
-	
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

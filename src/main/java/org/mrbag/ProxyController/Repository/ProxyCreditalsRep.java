@@ -24,6 +24,14 @@ public interface ProxyCreditalsRep extends JpaRepository<ProxyCreditals,Long> {
 	@Query("SELECT pc.login, pc.password, pc.toDate, pc.ps, pc.isContinue FROM ProxyCreditals pc WHERE pc.user = :usr")
 	Collection<ProxyCreditalsDTO> findAllByUser(@Param("usr") User usr);
 	
+	@Query("Select pc FROM ProxyCreditals pc WHERE pc.login = :lgn AND pc.password = :psw AND pc.ps = "
+			+ "(SELECT ps FROM ProxyServers ps WHERE ps.token = :pxs)")
+	ProxyCreditals findByCustomforContinue(
+				@Param("lgn") String login,
+				@Param("psw") String password,
+				@Param("pxs") String token
+			);
+	
 
 //	void dropAllBeforeDate(@Param("time") LocalDateTime ldt);
 	

@@ -1,5 +1,6 @@
 package org.mrbag.ProxyController.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import org.mrbag.ProxyController.Objects.ProxyCreditals;
@@ -17,6 +18,23 @@ public class UtilCreditals {
 	UtilProxyServer servers;
 	
 	UtilUser users;
+	
+	public boolean setResumeStatus(boolean isContinue, String login, String password, String token) {
+		ProxyCreditals pc = creditals.findByCustomforContinue(login, password, token);
+		if (isContinue) {
+			if (pc.getToDate().isAfter(LocalDateTime.now())) {
+				pc.setContinue(false);
+			}
+			else {
+				///TODO Add resume process
+				return false;
+			}
+		}else {
+			pc.setContinue(false);
+		}
+		creditals.save(pc);
+		return true;
+	}
 	
 	public User checkAuthUser(String login, String token) {
 		User usr = users.getActiveUser(token);
