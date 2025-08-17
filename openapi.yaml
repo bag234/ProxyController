@@ -1,0 +1,169 @@
+openapi: 3.0.1
+info:
+  title: "ProxyController API"
+  description: "Документация REST API для ProxyController. Все описания на русском языке."
+  version: "1.0.0"
+servers:
+  - url: "http://localhost:8080"
+    description: "Локальный сервер"
+paths:
+  /api/User/{token}/balance:
+    get:
+      summary: "Получить баланс пользователя"
+      description: "Возвращает баланс пользователя по токену."
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Токен пользователя"
+      responses:
+        '200':
+          description: "Баланс успешно получен."
+    post:
+      summary: "Пополнить баланс пользователя"
+      description: "Пополняет баланс пользователя по токену."
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Токен пользователя"
+      requestBody:
+        description: "Данные для пополнения баланса."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionDTO'
+      responses:
+        '200':
+          description: "Баланс успешно пополнен."
+    patch:
+      summary: "Проверить возможность списания средств"
+      description: "Проверяет, можно ли списать средства с баланса пользователя."
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Токен пользователя"
+      requestBody:
+        description: "Данные для проверки операции."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionDTO'
+      responses:
+        '200':
+          description: "Проверка успешно выполнена."
+  /api/User/new:
+    post:
+      summary: "Регистрация нового пользователя"
+      description: "Создает нового пользователя."
+      requestBody:
+        description: "Данные для регистрации пользователя."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: "Пользователь успешно зарегистрирован."
+  /api/User/login:
+    post:
+      summary: "Вход пользователя"
+      description: "Аутентификация пользователя по логину и паролю."
+      requestBody:
+        description: "Данные для входа пользователя."
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: "Пользователь успешно вошел."
+        '401':
+          description: "Ошибка аутентификации."
+  /api/User/{token}:
+    get:
+      summary: "Получить информацию о пользователе"
+      description: "Возвращает информацию о пользователе по токену."
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Токен пользователя"
+      responses:
+        '200':
+          description: "Информация успешно получена."
+    delete:
+      summary: "Удалить пользователя"
+      description: "Удаляет пользователя по токену."
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Токен пользователя"
+      responses:
+        '200':
+          description: "Пользователь успешно удален."
+  /api/User/{token}/block:
+    get:
+      summary: "Заблокировать пользователя"
+      description: "Блокирует пользователя по токену."
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Токен пользователя"
+      responses:
+        '200':
+          description: "Пользователь успешно заблокирован."
+  /api/User/{token}/unblock:
+    get:
+      summary: "Разблокировать пользователя"
+      description: "Разблокирует пользователя по токену."
+      parameters:
+        - name: token
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "Токен пользователя"
+      responses:
+        '200':
+          description: "Пользователь успешно разблокирован."
+components:
+  schemas:
+    TransactionDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "Идентификатор транзакции"
+        cost:
+          type: number
+          format: double
+          description: "Сумма транзакции"
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          description: "Имя пользователя"
+        password:
+          type: string
+          description: "Пароль пользователя"
