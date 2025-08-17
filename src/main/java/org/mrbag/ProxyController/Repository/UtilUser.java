@@ -29,19 +29,35 @@ public class UtilUser {
 	
 	@Transactional
 	synchronized public boolean operationWriting(String token, double amount) {
-		if (amount > 0 )
+		if (amount < 0 )
 			return false;
 		
 		User usr =(User) manger.createQuery(
 				"SELECT u FROM User u WHERE u.token = :tkn")
-				.setParameter(":tkn", token).getSingleResult();
-		if (usr.writing(amount))
+				.setParameter("tkn", token).getSingleResult();
+		if (!usr.writing(amount))
 			return false;
 		
 		manger.persist(usr);		
-		
 		return true;
 	}
+	
+	@Transactional
+	synchronized public boolean operationWriting(long id , double amount) {
+		if (amount == 0) return true;
+		if (amount < 0 )
+			return false;
+		
+		User usr =(User) manger.createQuery(
+				"SELECT u FROM User u WHERE u.id = :id")
+				.setParameter("id", id).getSingleResult();
+		if (!usr.writing(amount))
+			return false;
+		
+		manger.persist(usr);		
+		return true;
+	}
+	
 	
 	@Transactional
 	public void operationRefill(String token, double amount) {

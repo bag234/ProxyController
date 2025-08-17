@@ -15,3 +15,8 @@ spring:
       path: /h2
   application:
     name: ProxyOverlord
+app: 
+  cron:
+    transaction: 0 0/15 * * * ?
+    trash: 0 0 * * * ?
+  days: 7

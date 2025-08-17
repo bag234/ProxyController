@@ -7,8 +7,11 @@ import org.mrbag.ProxyController.Objects.ProxyCreditals;
 import org.mrbag.ProxyController.Objects.ProxyServers;
 import org.mrbag.ProxyController.Objects.User;
 import org.mrbag.ProxyController.Objects.Dute.ProxyCreditalsDTO;
+import org.mrbag.ProxyController.Objects.Dute.TransactionDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class UtilCreditals {
@@ -36,12 +39,28 @@ public class UtilCreditals {
 		return true;
 	}
 	
+	@Transactional
+	public void deleteALLBefore(LocalDateTime ldt) {
+		creditals.deleteAllOlderThan(ldt);
+	}
+	
+	@Transactional
+	public void setContinueWithId(long id, boolean isContinue) {
+		creditals.setContinueWithId(id, isContinue);
+	}
+	
 	public User checkAuthUser(String login, String token) {
 		User usr = users.getActiveUser(token);
 		if (usr == null || !usr.getLogin().equals(login))
 			return null;
 		return usr;
 	}
+	
+	@Transactional
+	public void setDateById(long id, LocalDateTime ldt) {
+		creditals.setDateWithId(id, ldt);
+	}
+	
 	
 	public ProxyCreditals makeNewCreditals(User usr, ProxyServers server) {
 		if(usr == null || server == null) return null;
@@ -61,6 +80,10 @@ public class UtilCreditals {
 		return creditals.findAllByProxyServersFiltredByTime(pxs) ;
 	}
 	
+	public Collection<TransactionDTO> convertTransction(LocalDateTime start, LocalDateTime end){
+		return creditals.selectTransction(start, end);
+	}
+	
 	@Autowired
 	public void setUsers(UtilUser users) {
 		this.users = users;
@@ -75,5 +98,7 @@ public class UtilCreditals {
 	public void setServers(UtilProxyServer servers) {
 		this.servers = servers;
 	}
+	
+	
 	
 }

@@ -1,7 +1,11 @@
 package org.mrbag.ProxyController.Repository;
 
+import java.util.Collection;
+import java.util.Map;
+
 import org.mrbag.ProxyController.Objects.ProxyServers;
 import org.mrbag.ProxyController.Objects.StatusServer;
+import org.mrbag.ProxyController.Objects.Dute.IDandCOSTDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +30,8 @@ public interface ProxyServerRep extends JpaRepository<ProxyServers, Long> {
 	@Modifying
 	@Query("DELETE FROM ProxyServers px WHERE px.token = :tok")
 	void dropOneByToken(@Param("tok") String token);
+	
+	@Query("SELECT px.id, px.cost FROM ProxyServers px")
+	Collection<IDandCOSTDTO> selectAllToCost();
+	
 }

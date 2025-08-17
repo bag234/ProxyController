@@ -2,6 +2,8 @@ package org.mrbag.ProxyController.Repository;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.mrbag.ProxyController.Objects.ProxyCreditals;
 import org.mrbag.ProxyController.Objects.ProxyServers;
@@ -65,6 +67,11 @@ public class UtilProxyServer {
 //	TODO add call after all intilazeing
 	public void setAllOfline() {
 		servers.updateStatusAll(StatusServer.OFFLINE);
+	}
+	
+	
+	public Map<Long, Double> getIDandCost(){
+		return servers.selectAllToCost().stream().collect(Collectors.toMap(obj -> obj.getId(), obj -> obj.getCost()));
 	}
 	
 	public void update(ProxyServers pxs) {
