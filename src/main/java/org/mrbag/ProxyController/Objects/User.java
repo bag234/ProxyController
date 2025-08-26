@@ -45,7 +45,7 @@ public class User {
 	}
 	
 	/*
-	 * Simple method operation of balance, Add TODO all operation on using jpql
+	 * Simple method operation of balance
 	 */
 	synchronized public boolean writing(double amount) {
 		if (amount > 0 && balance < amount) return false;

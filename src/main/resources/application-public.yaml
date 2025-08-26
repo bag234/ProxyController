@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:./testdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      #ddl-auto: create #update table
+      ddl-auto: update
+      
+app: 
+  cron:
+    transaction: 0 0/15 * * * ?
+    trash: 0 0 * * * ?
+  days: 7

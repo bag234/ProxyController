@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Администрирование ProxyServer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-4">
+    <h2 class="mb-4">Администрирование ProxyServer</h2>
+
+    <!-- Список всех прокси-серверов -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span><i class="bi bi-hdd-network me-2"></i>Список всех прокси-серверов</span>
+            <button class="btn btn-primary btn-sm" onclick="loadServers()">Обновить</button>
+        </div>
+        <div class="card-body">
+            <div id="serverCards" class="row g-3"></div>
+        </div>
+    </div>
+
+    <!-- Добавить новый прокси-сервер -->
+    <div class="card mb-4">
+        <div class="card-header">Добавить новый прокси-сервер</div>
+        <div class="card-body">
+            <button class="btn btn-success" onclick="addServer()">Добавить</button>
+        </div>
+    </div>
+
+    <!-- Удалить прокси-сервер -->
+    <div class="card mb-4">
+        <div class="card-header">Удалить прокси-сервер</div>
+        <div class="card-body">
+            <input type="text" id="deleteToken" class="form-control mb-2" placeholder="Токен сервера">
+            <button class="btn btn-danger" onclick="deleteServer()">Удалить</button>
+        </div>
+    </div>
+
+    <!-- События сервера -->
+    <div class="card mb-4">
+        <div class="card-header">События сервера</div>
+        <div class="card-body">
+            <input type="text" id="eventToken" class="form-control mb-2" placeholder="Токен сервера">
+            <button class="btn btn-info mb-2" onclick="loadEvents()">Показать события</button>
+            <button class="btn btn-warning mb-2" onclick="cleanEvents()">Очистить события</button>
+            <ul id="eventList" class="list-group"></ul>
+        </div>
+    </div>
+
+    <!-- Отправить команду -->
+    <div class="card mb-4">
+        <div class="card-header">Отправить команду на сервер</div>
+        <div class="card-body">
+            <input type="text" id="commandToken" class="form-control mb-2" placeholder="Токен сервера">
+            <input type="text" id="commandText" class="form-control mb-2" placeholder="Текст команды">
+            <button class="btn btn-secondary" onclick="sendCommand()">Отправить</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function loadServers() {
+    fetch('/api/ProxyServer/all')
+        .then(res => res.json())
+        .then(data => {
+            const container = document.getElementById('serverCards');
+            container.innerHTML = '';
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div class="col"><div class="alert alert-info">Нет серверов</div></div>';
+                return;
+            }
+            data.forEach(server => {
+                const card = document.createElement('div');
+                card.className = 'col-md-4';
+                card.innerHTML = `
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-primary text-white">
+                            <i class="bi bi-server"></i> Сервер: <b>${server.name || server.token || 'Без имени'}</b>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>IP:</strong> ${server.ip || '-'}<br>
+                            <strong>Порт:</strong> ${server.port || '-'}<br>
+                            <strong>Статус:</strong> ${server.status || '-'}<br>
+                            <strong>Тип:</strong> ${server.type || '-'}<br>
+                            <strong>Токен:</strong> <span class="text-monospace">${server.token || '-'}</span></p>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <button class="btn btn-danger btn-sm" onclick="deleteServerByToken('${server.token || ''}')"><i class="bi bi-trash"></i> Удалить</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        });
+}
+
+function deleteServerByToken(token) {
+    if (!token) return alert('Токен не указан');
+    fetch('/api/ProxyServer/' + token, { method: 'DELETE' })
+        .then(() => {
+            alert('Сервер удалён');
+            loadServers();
+        });
+}
+
+function addServer() {
+    fetch('/api/ProxyServer/new', { method: 'POST' })
+        .then(res => res.text())
+        .then(msg => alert('Сервер добавлен: ' + msg));
+}
+
+function deleteServer() {
+    const token = document.getElementById('deleteToken').value;
+    fetch('/api/ProxyServer/' + token, { method: 'DELETE' })
+        .then(() => alert('Сервер удалён'));
+}
+
+function loadEvents() {
+    const token = document.getElementById('eventToken').value;
+    fetch('/api/ProxyServer/' + token + '/events')
+        .then(res => res.json())
+        .then(data => {
+            const list = document.getElementById('eventList');
+            list.innerHTML = '';
+            data.forEach(event => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.textContent = JSON.stringify(event);
+                list.appendChild(li);
+            });
+        });
+}
+
+function cleanEvents() {
+    const token = document.getElementById('eventToken').value;
+    fetch('/api/ProxyServer/' + token + '/events', { method: 'DELETE' })
+        .then(() => alert('События очищены'));
+}
+
+function sendCommand() {
+    const token = document.getElementById('commandToken').value;
+    const command = document.getElementById('commandText').value;
+    fetch('/api/ProxyServer/' + token + '/events', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ command })
+    })
+    .then(res => res.json())
+    .then(result => alert('Команда отправлена: ' + result));
+}
+</script>
+</body>
+</html>
